@@ -1,0 +1,19 @@
+{
+  "target_total": 70,
+  "actual_total": 70,
+  "actual_counts_by_bucket": {
+    "good_fit_confident": 35,
+    "no_fit_confident": 35
+  },
+  "shortfalls": {},
+  "expected_decision_distribution": {
+    "Good Fit": 35,
+    "No Fit": 35
+  },
+  "annotation_status_counts": {
+    "machine_annotated": 70
+  },
+  "n_machine_annotated": 70,
+  "n_needs_review": 0,
+  "note": "This golden set contains ONLY machine_annotated, non-conflicting records (confident Good Fit / No Fit). Potential Fit, label_conflict, and insufficient-signal edge cases, and the LLM review step (06_review_needs_review.py), were intentionally removed from this golden-set build per explicit instruction. Those edge cases still exist in the full annotated_dataset.csv backlog (3,152 needs_review rows) for future human review; see human_review_checklist.md."
+}

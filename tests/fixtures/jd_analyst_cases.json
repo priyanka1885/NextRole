@@ -1,0 +1,18 @@
+[
+  {
+    "name": "python_backend_role",
+    "jd_text": "We are hiring a Senior Software Engineer with experience in Python, Django, and REST APIs. The candidate will lead a small team and build scalable web applications. 5+ years of experience required. Preferred: AWS experience.",
+    "predicted_required_skills": ["Python", "Django", "REST APIs"],
+    "expected_required_skills": ["Python", "Django", "REST APIs", "AWS"],
+    "predicted_preferred_qualifications": ["AWS experience"],
+    "expected_preferred_qualifications": ["AWS experience"]
+  },
+  {
+    "name": "data_analyst_role",
+    "jd_text": "Looking for a Data Analyst skilled in SQL, Excel, and Tableau to analyze sales data and build dashboards for leadership. 2+ years of experience with relational databases required. Preferred: experience with Python for data analysis.",
+    "predicted_required_skills": ["SQL", "Excel", "Tableau"],
+    "expected_required_skills": ["SQL", "Excel", "Tableau", "Python"],
+    "predicted_preferred_qualifications": ["Python for data analysis"],
+    "expected_preferred_qualifications": ["Python for data analysis"]
+  }
+]

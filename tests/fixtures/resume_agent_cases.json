@@ -1,0 +1,26 @@
+[
+  {
+    "name": "genuine_rephrase_not_flagged",
+    "source_resume_text": "Worked as a cashier at a local grocery store for two years, handling customer transactions.",
+    "tailored_bullet": "Served as a cashier at a local grocery store for two years, handling customer transactions.",
+    "should_flag": false
+  },
+  {
+    "name": "fabricated_title_is_flagged",
+    "source_resume_text": "Worked as a cashier at a local grocery store for two years.",
+    "tailored_bullet": "Led a team of 50 engineers at a Fortune 500 aerospace company.",
+    "should_flag": true
+  },
+  {
+    "name": "fabricated_metric_is_flagged",
+    "source_resume_text": "Improved page load time noticeably through caching.",
+    "tailored_bullet": "Improved page load time by 97% through caching.",
+    "should_flag": true
+  },
+  {
+    "name": "genuine_metric_not_flagged",
+    "source_resume_text": "Reduced build time by 30% using parallel compilation.",
+    "tailored_bullet": "Cut build time by 30% via parallel compilation.",
+    "should_flag": false
+  }
+]

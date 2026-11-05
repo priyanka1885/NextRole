@@ -1,0 +1,48 @@
+{
+  "n_total": 6241,
+  "missing_counts": {
+    "resume_text": 0,
+    "job_description_text": 0,
+    "label": 0
+  },
+  "empty_after_strip": {
+    "resume_text": 0,
+    "job_description_text": 0
+  },
+  "n_full_dupes": 2,
+  "n_pair_dupes": 7,
+  "resume_dupe_count": 5599,
+  "jd_dupe_count": 5961,
+  "label_counts": {
+    "No Fit": 3143,
+    "Potential Fit": 1556,
+    "Good Fit": 1542
+  },
+  "len_stats": {
+    "resume_text": {
+      "min": 897,
+      "max": 25364,
+      "mean": 5804.4,
+      "median": 5134.0,
+      "p05": 2287.0,
+      "p95": 12367.0
+    },
+    "job_description_text": {
+      "min": 72,
+      "max": 7669,
+      "mean": 2731.3,
+      "median": 2384.0,
+      "p05": 513.0,
+      "p95": 5954.0
+    }
+  },
+  "too_short_resume": 0,
+  "too_short_jd": 0,
+  "pii_counts": {
+    "emails_rows": 1017,
+    "phones_rows": 243,
+    "street_addresses_rows": 356
+  },
+  "non_ascii_rows_resume": 5330,
+  "non_ascii_rows_jd": 20
+}

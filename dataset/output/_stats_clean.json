@@ -1,0 +1,22 @@
+{
+  "n_input": 6241,
+  "n_excluded_total": 1,
+  "n_cleaned_output": 6240,
+  "exclusion_reason_counts": {
+    "duplicate_exact_row": 1
+  },
+  "n_conflicting_label_pairs": 6,
+  "n_rows_in_conflicting_pairs": 12,
+  "pii_masked_counts": {
+    "emails": 1017,
+    "phones": 347,
+    "addresses": 1565
+  },
+  "unique_resume_ids": 642,
+  "unique_job_ids": 280,
+  "label_counts_after_cleaning": {
+    "No Fit": 3142,
+    "Potential Fit": 1556,
+    "Good Fit": 1542
+  }
+}

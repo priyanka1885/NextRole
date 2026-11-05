@@ -1,0 +1,35 @@
+{
+  "n_annotated": 6240,
+  "annotation_status_counts": {
+    "needs_review": 3999,
+    "machine_annotated": 2241
+  },
+  "expected_match_counts": {
+    "no_match": 3142,
+    "partial_match": 1556,
+    "match": 1542
+  },
+  "experience_match_counts": {
+    "needs_review": 2011,
+    "meets": 1706,
+    "not_specified": 1463,
+    "below": 811,
+    "close": 249
+  },
+  "education_match_counts": {
+    "not_specified": 2700,
+    "meets": 1618,
+    "needs_review": 1613,
+    "below": 309
+  },
+  "n_no_skill_candidates": 23,
+  "mean_skill_overlap_ratio": 0.11,
+  "review_reason_counts": {
+    "insufficient_experience_signal": 2011,
+    "insufficient_education_signal": 1613,
+    "ambiguous_source_label": 1556,
+    "suspicious_low_overlap": 359,
+    "no_skill_candidates_extracted": 23,
+    "conflicting_label_on_duplicate_pair": 12
+  }
+}
