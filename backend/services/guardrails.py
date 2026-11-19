@@ -6,6 +6,7 @@ Guardrail checks implementing spec.md Section 10.
 | SEC-001 | Structural, enforced in llm/ollama_client.py (role separation). Here, `wrap_untrusted_content` labels any user/scraped text passed into a prompt as data, not instructions. |
 | SEC-002 | `check_traceability` - maps tailored bullets back to source resume text; unmapped content is flagged. |
 | SEC-003 | `check_numeric_claims` - flags numeric claims (%, counts, durations) absent from the source resume. |
+| FR-024 | `check_tailoring_effectiveness` - flags the opposite failure mode: a draft that is a near-verbatim, untailored copy of the source resume. |
 | SEC-005 | `sanitize_text` - strips control characters / collapses whitespace before content reaches the LLM or render pipeline. |
 | SEC-006 | `screen_unsafe_content` - lightweight keyword/pattern screen on generated content. |
 
@@ -16,6 +17,7 @@ phase (Future, per scope.md/requirements.md).
 from __future__ import annotations
 
 import re
+from difflib import SequenceMatcher
 from typing import Dict, List, Tuple
 
 # --- SEC-005: sanitize untrusted text before it reaches LLM or renderer ----
@@ -142,6 +144,165 @@ def check_jd_keyword_fabrication(
                         f"backed by the source resume: \"{bullet}\""
                     )
     return flagged
+
+
+# --- FR-024: tailoring-effectiveness check ---------------------------------
+
+# Section types the Resume Agent's own system prompt already allows to stay
+# unchanged (static/factual content, not prose meant to be reworded to match
+# a JD). Matched case-insensitively against section names. This allowlist is
+# consulted only by the per-section localized-passthrough check (added
+# separately); it does not affect the whole-document comparison below.
+_STATIC_SECTION_TYPES = {
+    "education",
+    "academic background",
+    "skills",
+    "technical skills",
+    "core competencies",
+    "areas of expertise",
+    "certifications",
+    "certificates",
+    "licenses",
+    "achievements",
+    "awards",
+    "honors",
+    "publications",
+    "summary of qualifications",
+    "qualifications",
+    "languages",
+    "interests",
+    "references",
+}
+
+
+def _joined_bullet_text(sections: Dict[str, List[str]]) -> str:
+    parts: List[str] = []
+    for bullets in sections.values():
+        parts.extend(bullets)
+    return " ".join(parts).strip().lower()
+
+
+def _best_bullet_match_ratio(bullet: str, candidates: List[str]) -> float:
+    """Best character-similarity ratio of `bullet` against any of `candidates`."""
+    best = 0.0
+    bullet_lower = bullet.lower()
+    for candidate in candidates:
+        ratio = SequenceMatcher(None, bullet_lower, candidate.lower()).ratio()
+        if ratio > best:
+            best = ratio
+    return best
+
+
+def _localized_passthrough_flags(
+    tailored_sections: Dict[str, List[str]],
+    source_sections: Dict[str, List[str]],
+    bullet_identical_ratio: float,
+    section_min_identical_count: int,
+    section_min_identical_ratio: float,
+) -> List[str]:
+    """Per-section check for a large, localized block of near-identical
+    bullets -- catches passthrough that a single whole-document ratio
+    masks when other sections were heavily reworded (see module docstring
+    / design.md Property 1)."""
+    flags: List[str] = []
+    for section, tailored_bullets in tailored_sections.items():
+        if section.strip().lower() in _STATIC_SECTION_TYPES:
+            continue
+        if not tailored_bullets:
+            continue
+        source_bullets = source_sections.get(section, [])
+        if not source_bullets:
+            continue
+
+        identical_count = sum(
+            1
+            for bullet in tailored_bullets
+            if _best_bullet_match_ratio(bullet, source_bullets) >= bullet_identical_ratio
+        )
+        total = len(tailored_bullets)
+        if (
+            identical_count >= section_min_identical_count
+            and (identical_count / total) >= section_min_identical_ratio
+        ):
+            flags.append(
+                f"Section '{section}' shows localized tailoring passthrough: "
+                f"{identical_count}/{total} bullets ({identical_count / total:.0%}) "
+                "are near-identical to their closest-matching source bullet, "
+                "even though the rest of the document may look reworded."
+            )
+    return flags
+
+
+def check_tailoring_effectiveness(
+    tailored_sections: Dict[str, List[str]],
+    source_sections: Dict[str, List[str]],
+    min_identical_ratio: float = 0.97,
+    bullet_identical_ratio: float = 0.90,
+    section_min_identical_count: int = 2,
+    section_min_identical_ratio: float = 0.4,
+) -> List[str]:
+    """FR-024: flag the opposite failure mode from `check_traceability`.
+
+    `check_traceability` rewards tailored content that stays close to the
+    source (to avoid fabrication, SEC-002); taken alone, that means a Resume
+    Agent draft that is a verbatim, untailored copy of the source resume
+    passes every fabrication guardrail perfectly while completely failing
+    FR-024 ("tailor wording/emphasis to the JD"). This check closes that gap
+    in two complementary ways:
+
+    1. Whole-document ratio (`min_identical_ratio`, default 0.97): compares
+       the full tailored document against the full source document (bullets
+       from every section joined into one string) using a character-level
+       similarity ratio. A high ratio means almost nothing was reworded
+       anywhere. This defaults to 0.97 so that normal, legitimate tailoring
+       -- which often leaves short factual sections like education or a
+       skills list unchanged while rewording summary/experience bullets --
+       is not falsely flagged; only a near-total passthrough trips this
+       check on its own.
+
+    2. Per-section localized-passthrough check (`bullet_identical_ratio`,
+       `section_min_identical_count`, `section_min_identical_ratio`): a
+       handful of heavily-reworded bullets elsewhere in the document can
+       pull the whole-document ratio comfortably below 0.97 even when a
+       large, user-visible block of one section (e.g. older roles in
+       `experience`) is left almost untouched. For every non-static
+       tailorable section, each tailored bullet is compared against every
+       bullet in the corresponding source section and the best
+       character-similarity ratio is kept; bullets whose best ratio is
+       `>= bullet_identical_ratio` count as near-identical. A section is
+       flagged when that count is both `>= section_min_identical_count`
+       (avoids flagging a single coincidentally-unchanged bullet) AND its
+       fraction of the section's tailored bullets is
+       `>= section_min_identical_ratio`.
+
+    Flags from both checks are combined into one returned list, so a caller
+    reacting to "any flags present" (e.g. `resume_agent.py`'s bounded
+    corrective retry) needs no change.
+    """
+    flags: List[str] = []
+
+    tailored_text = _joined_bullet_text(tailored_sections)
+    source_text = _joined_bullet_text(source_sections)
+    if tailored_text and source_text:
+        ratio = SequenceMatcher(None, source_text, tailored_text).ratio()
+        if ratio >= min_identical_ratio:
+            flags.append(
+                "Tailoring produced little to no change from the source resume "
+                f"(content is {ratio:.0%} identical) -- the job description's "
+                "language and emphasis were not meaningfully incorporated."
+            )
+
+    flags.extend(
+        _localized_passthrough_flags(
+            tailored_sections,
+            source_sections,
+            bullet_identical_ratio,
+            section_min_identical_count,
+            section_min_identical_ratio,
+        )
+    )
+
+    return flags
 
 
 def _best_matching_source_line(bullet_words: set, source_lines: List[str]) -> str:

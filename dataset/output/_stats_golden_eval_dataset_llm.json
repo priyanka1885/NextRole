@@ -1,0 +1,24 @@
+{
+  "final_size": 100,
+  "model": "llama3.1:8b",
+  "annotation_status_counts": {
+    "llm_pilot_annotated": 100
+  },
+  "expected_decision_distribution": {
+    "No Fit": 50,
+    "Potential Fit": 25,
+    "Good Fit": 25
+  },
+  "llm_decision_distribution": {
+    "No Fit": 47,
+    "Potential Fit": 44,
+    "Good Fit": 9
+  },
+  "agreement_with_original_label": 47,
+  "agreement_rate_pct": 47.0,
+  "n_fabrication_fixes_applied": 22,
+  "n_decision_evidence_inconsistencies_flagged": 1,
+  "n_llm_pilot_failed_unresolved": 0,
+  "n_errors": 0,
+  "n_warnings": 2
+}

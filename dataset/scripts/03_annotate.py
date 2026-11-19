@@ -7,6 +7,13 @@ Every derived field here comes from mechanical text matching (substring /
 keyword / regex / numeric comparison). Anything that would require genuine
 semantic judgment to resolve is marked `needs_review` for a human.
 
+See also: dataset/scripts/07_llm_semantic_pilot.py -- a separate, clearly
+distinct pipeline stage piloting LLM-based (Ollama, local) semantic
+annotation as a potential replacement for this heuristic stage, currently
+limited to a 100-record stratified sample pending human validation. This
+module's "no LLM calls" contract is intentionally left unchanged by that
+work; nothing here calls an LLM.
+
 Reads dataset/output/cleaned_dataset.csv, writes:
   - dataset/output/annotated_dataset.csv
   - dataset/output/_stats_annotate.json

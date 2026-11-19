@@ -3,7 +3,7 @@
 
 Pure Python / pandas / numpy / stdlib only. No LLM calls, no network calls.
 
-Reads f:\\NextRole\\train.csv and produces:
+Reads train.csv (at the project root) and produces:
   - dataset/reports/01_dataset_quality_report.md
   - dataset/output/audit_duplicates.csv        (full-duplicate rows, for inspection)
 
@@ -20,7 +20,7 @@ import pandas as pd
 
 from utils import VALID_LABELS, normalize_label
 
-ROOT = Path(__file__).resolve().parents[2]          # f:\NextRole
+ROOT = Path(__file__).resolve().parents[2]          # project root
 SRC_CSV = ROOT / "train.csv"
 OUT_DIR = ROOT / "dataset" / "output"
 REPORT_DIR = ROOT / "dataset" / "reports"

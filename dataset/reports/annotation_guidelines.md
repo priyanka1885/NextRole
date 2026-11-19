@@ -84,3 +84,38 @@ e.g. a record with *some* overlap but still a wrong label, or a mismatch that do
 also fail the experience/education heuristic, can still be `machine_annotated` without being
 correct. `machine_annotated` means "no contradiction was mechanically detected," not "this label
 was verified to be correct."
+
+## 7. LLM semantic annotation pilot (`07_llm_semantic_pilot.py`)
+
+A separate, clearly distinct pipeline stage pilots replacing the purely syntactic
+keyword/regex matching above with genuine semantic evidence comparison, using the project's
+existing local Ollama model (`llama3.1:8b`) via the same single-integration-point wrapper the
+backend agents use (`backend.llm.ollama_client.OllamaClient` -- reused as-is, no new dependency).
+
+- **Scope: pilot only.** Re-annotates a 100-record sample, stratified proportionally by the
+  original 3-class `label`, with a fixed seed. It never processes the full 6,240-record dataset,
+  and does not touch `annotated_dataset.csv` or `golden_eval_dataset.csv` -- it writes to its own
+  `dataset/output/llm_pilot_annotated.{csv,jsonl}` and
+  `dataset/reports/llm_pilot_validation_report.md`. Promoting this method beyond the pilot is a
+  separate, deliberate decision gated on a human reviewing that report.
+- **Schema:** output uses the same 14-column schema as `golden_eval_dataset.csv` (not the 17-column
+  `annotated_dataset.csv` schema) specifically so pilot output is directly comparable to, and a
+  drop-in candidate for, the golden set.
+- **`expected_decision`** is still always the original source label -- never overwritten by the
+  LLM's verdict, consistent with every other stage of this pipeline. The LLM's own `decision`
+  (Good Fit / Potential Fit / No Fit) is recorded only inside `decision_reason` (clearly prefixed
+  `"LLM semantic review (llama3.1:8b): decision=..."`), never in a new column.
+- **Clearly marked as machine-generated:** `annotation_status` is `llm_pilot_annotated` (success)
+  or `llm_pilot_failed` (LLM call failed validation/transport after retries -- recorded, not
+  silently dropped or guessed); `annotation_source` is `llm_semantic:llama3.1:8b` (+`call_failed`
+  on failure). Never `human_verified`.
+- **No-fabrication guardrail:** every `matching_skill` the LLM claims is checked, in plain Python
+  (no LLM), for at least a loose word-level textual trace in the resume text. Claims with none are
+  flagged inline in `decision_reason` ("GUARDRAIL WARNING: ... may be fabricated") rather than
+  trusted automatically -- this caught real cases in the pilot (e.g. claimed skills with no
+  resume evidence at all).
+- **Known hardware constraint:** on the machine this was piloted on, each call takes roughly
+  1.5-2.5 minutes (no apparent GPU acceleration), so resume/JD text is defensively truncated
+  (resume 6,000 / JD 3,000 chars) and the model is asked for concise output, purely to keep a
+  100-record pilot's wall-clock time tractable -- not a quality decision. See the validation
+  report for exact counts of truncated records.

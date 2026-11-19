@@ -1,0 +1,269 @@
+{
+  "pbtResults": {
+    "2. Write preservation property tests (BEFORE implementing fix)": {
+      "status": "passed",
+      "lastRunTimestamp": 1794925515269
+    }
+  },
+  "executionHistory": {
+    "1. Write bug condition exploration tests for all four defects": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924579224
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924590886
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924927594
+      }
+    ],
+    "2. Write preservation property tests (BEFORE implementing fix)": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924579306
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924932410
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794925537711
+      }
+    ],
+    "3.1 Add the static-section allowlist and remove the header exclusion": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924579365
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794925551195
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794925643806
+      }
+    ],
+    "3.2 Add the per-section localized-passthrough check inside check_tailoring_effectiveness": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924579447
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794925655076
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794925856874
+      }
+    ],
+    "4.1 Add contact_lines field to schemas": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924579492
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794925861743
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794926034728
+      }
+    ],
+    "4.2 Extract _raw_split and add contact-line classification": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924579547
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794926042639
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794926222827
+      }
+    ],
+    "4.3 Rebuild split_into_sections, add extract_contact_lines, update parse_resume_file": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924579600
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794926230178
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794926442734
+      }
+    ],
+    "5. Fix defect 3: carry contact_lines through resume_agent.py untouched": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924579652
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794926455986
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794926826077
+      }
+    ],
+    "6. Fix defect 2: stop dropping header-bucket content in rendercv_adapter.py": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924579719
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794926830857
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794926954285
+      }
+    ],
+    "7.1 Add clear_run_status to database.py": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924579782
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794926959616
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794927017970
+      }
+    ],
+    "7.2 Replace the permanent one-shot guard with an approval-aware one": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924579836
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794927022436
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794927303587
+      }
+    ],
+    "8. Verify exploration tests now pass": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924579898
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794927309743
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794927587213
+      }
+    ],
+    "9. Verify preservation tests still pass": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924579951
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794927591977
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794927691802
+      }
+    ],
+    "10. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794924580005
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794927696121
+      },
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794928196541
+      }
+    ],
+    "3. Fix defect 1 and 2: localized passthrough detection and header-bucket evaluation in guardrails.py": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794925857049
+      }
+    ],
+    "4. Fix defects 2 and 3: contact-line extraction in resume_parser.py and schemas.py": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794926442838
+      }
+    ],
+    "7. Fix defect 4: approval-aware re-trigger guard in pipeline_service.py and database.py": [
+      {
+        "executionId": "e0cb8585-a499-493b-af9b-6083fb103156",
+        "chatSessionId": "sess_66c6a17a-685b-402c-ab86-741e5dcf7a65",
+        "timestamp": 1794927303707
+      }
+    ]
+  }
+}

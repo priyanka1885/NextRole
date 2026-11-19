@@ -1,11 +1,18 @@
-"""
+﻿"""
 RenderCV integration (FR-007, FR-044, FR-067-069).
 
 Maps a TailoredResume (flat section -> bullet-list shape) onto a minimal
 RenderCV YAML input and invokes the RenderCV CLI to produce a PDF.
 
 - FR-067: every TailoredResume section becomes its own RenderCV section, so
-  no content is dropped by the template.
+  no content is dropped by the template. The "header" bucket
+  (backend/services/resume_parser.py's _PREAMBLE_SECTION) is rendered like
+  any other section: resume_parser now splits the candidate's literal
+  name/email/phone/link lines into ResumeData.contact_lines before the LLM
+  ever sees the preamble, so a "header" key remaining in
+  tailored_resume.sections is genuine unrecognized-header tailorable
+  content, never a duplicate of cv.name/email/phone/social_networks -- so
+  it must not be excluded here.
 - FR-069: a single, configurable theme is used at MVP (settings.rendercv_theme).
 - FR-068: the resulting PDF is checked for existence and non-zero size
   before being returned to the caller.
@@ -25,6 +32,16 @@ from backend.models.schemas import TailoredResume
 
 _EMAIL_RE = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
 _PHONE_RE = re.compile(r"(\+?\d[\d\-\s().]{7,}\d)")
+_LINKEDIN_RE = re.compile(r"linkedin\.com/in/([A-Za-z0-9\-_%]+)", re.IGNORECASE)
+_GITHUB_RE = re.compile(r"github\.com/([A-Za-z0-9\-_]+)", re.IGNORECASE)
+
+# Sections that duplicate content already carried via cv.name/email/phone/
+# social_networks (contact information) or are intentionally omitted from
+# the exported body (summary) and must not be re-rendered as their own
+# labeled body section. "header" is deliberately NOT in this set: contact
+# lines are now extracted separately into contact_lines (see module
+# docstring), so a "header" key is genuine tailorable content.
+_HEADER_DUPLICATE_SECTIONS = {"summary", "contact information", "contact info", "contact"}
 
 
 class RenderError(Exception):
@@ -49,25 +66,70 @@ def _guess_phone(raw_text: str) -> Optional[str]:
     return match.group(0).strip() if match else None
 
 
+def _guess_linkedin(raw_text: str) -> Optional[str]:
+    match = _LINKEDIN_RE.search(raw_text)
+    return match.group(1).strip("/") if match else None
+
+
+def _guess_github(raw_text: str) -> Optional[str]:
+    match = _GITHUB_RE.search(raw_text)
+    return match.group(1).strip("/") if match else None
+
+
 def build_rendercv_yaml(tailored_resume: TailoredResume, resume_raw_text: str) -> dict:
     """Build the RenderCV input structure for an approved tailored resume."""
     sections = {
         name: list(bullets)
         for name, bullets in tailored_resume.sections.items()
-        if bullets
+        if bullets and name.strip().lower() not in _HEADER_DUPLICATE_SECTIONS
     }
 
     cv: dict = {"name": _guess_name(resume_raw_text), "sections": sections}
     email = _guess_email(resume_raw_text)
     phone = _guess_phone(resume_raw_text)
+    linkedin = _guess_linkedin(resume_raw_text)
+    github = _guess_github(resume_raw_text)
+
     if email:
         cv["email"] = email
+
+    social_networks = []
+    if linkedin:
+        social_networks.append({"network": "LinkedIn", "username": linkedin})
+    if github:
+        social_networks.append({"network": "GitHub", "username": github})
+    if social_networks:
+        cv["social_networks"] = social_networks
+
     if phone:
-        cv["phone"] = phone
+        # cv.phone is strictly validated by RenderCV (via pydantic_extra_types
+        # + phonenumbers) as an international PhoneNumber and raises a
+        # validation error -> crashes export for any number without a
+        # country code, regardless of which country it's from. Guessing a
+        # country code would be wrong as often as not, so instead route the
+        # number through custom_connections: its `placeholder` is free text
+        # with no format validation, so the number is shown exactly as
+        # extracted from the resume, for any country, without ever failing
+        # export.
+        cv["custom_connections"] = [
+            {"fontawesome_icon": "phone", "placeholder": phone, "url": None}
+        ]
 
     return {
         "cv": cv,
-        "design": {"theme": settings.rendercv_theme},
+        "design": {
+            "theme": settings.rendercv_theme,
+            # Name is centered + bold by default in the classic theme; this
+            # only tightens vertical spacing and adds the "|" separator the
+            # user asked for between header connection items (email, phone,
+            # LinkedIn, GitHub), keeping the whole header on one compact
+            # line instead of the default wider spacing.
+            "header": {
+                "space_below_name": "0.3cm",
+                "space_below_connections": "0.3cm",
+                "connections": {"separator": "|"},
+            },
+        },
     }
 
 
@@ -102,7 +164,7 @@ def render_tailored_resume_pdf(
             f"{result.stderr or result.stdout}"
         )
 
-    pdf_candidates = list(output_root.glob("*.pdf"))
+    pdf_candidates = list(output_root.rglob("*.pdf"))
     if not pdf_candidates:
         raise RenderError("RenderCV reported success but produced no PDF file.")
 

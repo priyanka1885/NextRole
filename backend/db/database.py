@@ -255,3 +255,10 @@ def get_run_status(session_id: str, db_path: Optional[str] = None) -> Dict[str, 
         }
         for row in rows
     }
+
+
+def clear_run_status(session_id: str, db_path: Optional[str] = None) -> None:
+    """Delete all run_status rows for a session (used before a re-triggered run)."""
+    with get_connection(db_path) as conn:
+        conn.execute("DELETE FROM run_status WHERE session_id = ?", (session_id,))
+        conn.commit()

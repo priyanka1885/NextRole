@@ -7,14 +7,24 @@ from __future__ import annotations
 from typing import Any, Dict, Optional
 
 from backend.db import database as db
-from backend.models.schemas import ResumeData
+from backend.models.schemas import ApprovalStatusEnum, ResumeData
 from backend.pipeline.graph import get_compiled_graph, thread_config
 from backend.pipeline.state import new_pipeline_state
 from backend.services.errors import PipelineStateError, SessionNotFoundError
+from backend.services.resume_parser import extract_contact_lines
 
 
 def _node_status_enum_value(status_obj: Any) -> str:
     return status_obj.value if hasattr(status_obj, "value") else str(status_obj)
+
+
+def _awaiting_approval_decision(session_id: str) -> bool:
+    """True only when a `tailored_resume` document exists for this session
+    and it has not yet been approved/rejected -- the one state where a
+    second, concurrent run would race the paused, checkpointed graph run
+    for that thread (defect 4, see bugfix.md/design.md)."""
+    doc = db.get_latest_document(session_id, "tailored_resume")
+    return bool(doc) and doc["content"].get("approval_status") == ApprovalStatusEnum.PENDING.value
 
 
 def persist_run_outputs(session_id: str, state: Dict[str, Any]) -> None:
@@ -49,11 +59,16 @@ def trigger_pipeline_run(session_id: str) -> None:
     if not jd_text:
         raise PipelineStateError("No job description submitted for this session.")
 
-    existing_status = db.get_run_status(session_id)
-    if existing_status:
+    if _awaiting_approval_decision(session_id):
         raise PipelineStateError("Pipeline has already been triggered for this session.")
 
-    resume_data = ResumeData(sections=resume_row["sections"], raw_text=resume_row["raw_text"])
+    db.clear_run_status(session_id)
+
+    resume_data = ResumeData(
+        sections=resume_row["sections"],
+        raw_text=resume_row["raw_text"],
+        contact_lines=extract_contact_lines(resume_row["raw_text"]),
+    )
     initial_state = new_pipeline_state(session_id, resume_data, jd_text)
 
     graph = get_compiled_graph()

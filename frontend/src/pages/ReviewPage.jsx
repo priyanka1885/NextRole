@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   approveResume,
-  exportResumeUrl,
   fetchExportBlob,
   getDocuments,
   getStatus,
@@ -16,8 +15,9 @@ const POLL_INTERVAL_MS = 2000
 
 // FR-050/052/053: review/approval page. Polls run status (FR-058) until the
 // pipeline halts or pauses at the approval gate, then shows the generated
-// documents and approval/export controls.
-export default function ReviewPage({ sessionId, onStartOver }) {
+// documents and approval/export controls. "Start over" now lives in the
+// shared AppHeader (App.jsx); the handler itself is unchanged.
+export default function ReviewPage({ sessionId }) {
   const [status, setStatus] = useState(null)
   const [documents, setDocuments] = useState(null)
   const [error, setError] = useState(null)
@@ -115,18 +115,17 @@ export default function ReviewPage({ sessionId, onStartOver }) {
   const hasFlags = Boolean(documents?.tailored_resume?.flagged_items?.length)
 
   return (
-    <div>
-      <div className="card">
-        <h2>Pipeline status</h2>
+    <>
+      <section className="card">
+        <div className="panel-heading">
+          <h2>Pipeline status</h2>
+        </div>
         <ErrorBanner message={error} onRetry={refresh} />
         <ProgressIndicator nodeStatus={status?.node_status} />
         {status?.halted && (
           <ErrorBanner message={`The pipeline stopped early: ${status.halt_reason}`} onRetry={refresh} />
         )}
-        <button type="button" className="secondary" onClick={onStartOver}>
-          Start over
-        </button>
-      </div>
+      </section>
 
       <DocumentViewer documents={documents} />
 
@@ -138,12 +137,6 @@ export default function ReviewPage({ sessionId, onStartOver }) {
         onReject={handleReject}
         onExport={handleExport}
       />
-
-      {documents?.tailored_resume?.approval_status === 'APPROVED' && (
-        <p className="field-hint">
-          Direct download link: <a href={exportResumeUrl(sessionId)}>{exportResumeUrl(sessionId)}</a>
-        </p>
-      )}
-    </div>
+    </>
   )
 }

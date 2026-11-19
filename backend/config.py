@@ -10,6 +10,14 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 
+from dotenv import load_dotenv
+
+# Load variables from a local .env file (if present) before reading them
+# below, so NEXTROLE_* settings can be persisted across process restarts
+# without exporting them in the shell each time. Real env vars already set
+# take precedence (load_dotenv does not override existing ones by default).
+load_dotenv()
+
 
 def _env_int(name: str, default: int) -> int:
     value = os.getenv(name)

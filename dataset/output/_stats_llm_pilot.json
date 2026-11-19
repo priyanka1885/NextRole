@@ -1,0 +1,35 @@
+{
+  "pilot_size": 100,
+  "model": "llama3.1:8b",
+  "seed": 42,
+  "label_distribution_sampled": {
+    "No Fit": 50,
+    "Potential Fit": 25,
+    "Good Fit": 25
+  },
+  "n_llm_calls_ok": 100,
+  "n_llm_calls_failed": 0,
+  "n_fabrication_guardrail_flagged": 22,
+  "agreement_with_original_label": {
+    "agree": 47,
+    "disagree": 53
+  },
+  "agreement_rate_pct": 47.0,
+  "confusion_matrix_label_vs_llm_decision": {
+    "No Fit -> No Fit": 33,
+    "No Fit -> Potential Fit": 16,
+    "No Fit -> Good Fit": 1,
+    "Potential Fit -> Potential Fit": 13,
+    "Potential Fit -> Good Fit": 7,
+    "Potential Fit -> No Fit": 5,
+    "Good Fit -> Potential Fit": 15,
+    "Good Fit -> Good Fit": 1,
+    "Good Fit -> No Fit": 9
+  },
+  "annotation_status_counts": {
+    "llm_pilot_annotated": 100
+  },
+  "mean_latency_seconds": 93.94,
+  "total_latency_seconds": 9394.4,
+  "gate": "PILOT ONLY. Do not run this approach on the full 6,240-record dataset until a human has reviewed dataset/reports/llm_pilot_validation_report.md and the sampled records in dataset/output/llm_pilot_annotated.csv."
+}

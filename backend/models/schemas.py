@@ -45,6 +45,7 @@ class ResumeData(BaseModel):
 
     sections: Dict[str, List[str]] = Field(default_factory=dict)
     raw_text: str = ""
+    contact_lines: List[str] = Field(default_factory=list)
 
 
 class JDExtraction(BaseModel):
@@ -75,6 +76,7 @@ class TailoredResume(BaseModel):
     traceability_map: Dict[str, str] = Field(default_factory=dict)
     flagged_items: List[str] = Field(default_factory=list)
     approval_status: ApprovalStatusEnum = ApprovalStatusEnum.PENDING
+    contact_lines: List[str] = Field(default_factory=list)
 
 
 class QA(BaseModel):

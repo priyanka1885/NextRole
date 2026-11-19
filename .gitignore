@@ -13,3 +13,24 @@ frontend/dist/
 
 # Env
 .env
+
+# Raw/intermediate dataset-prep artifacts (large, regenerable via
+# dataset/scripts/*.py from a locally-supplied train.csv; not needed to
+# run the app and too large to version). Final small deliverables under
+# dataset/output/ and dataset/reports/ are kept.
+/train.csv
+dataset/output/cleaned_dataset.csv
+dataset/output/annotated_dataset.csv
+
+# Demo recording (large binary; host externally and link it from the
+# README instead of committing it)
+*.mp4
+
+# Stray OneNote notebook files (not part of the project)
+*.one
+*.onetoc2
+
+# OS / editor cruft
+*.log
+.DS_Store
+Thumbs.db

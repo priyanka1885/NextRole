@@ -53,6 +53,7 @@ class OllamaClient:
         user_content: str,
         schema: Type[T],
         max_retries: int | None = None,
+        extra_options: dict | None = None,
     ) -> T:
         """Call the model and validate its JSON response against `schema`.
 
@@ -60,9 +61,17 @@ class OllamaClient:
         FR-065) on malformed JSON, schema validation failure, or transport
         error, with a short fixed delay between attempts (spec.md Section
         11: "short fixed delay, e.g., 1-2s, tunable").
+
+        `extra_options` merges additional Ollama `options` (e.g. `num_ctx`
+        for callers passing unusually long documents) on top of the default
+        temperature setting. Optional and additive only -- omitting it
+        reproduces the exact previous behavior for existing callers.
         """
         retries = settings.max_retries if max_retries is None else max_retries
         last_error: Exception | None = None
+        options = {"temperature": settings.llm_temperature}
+        if extra_options:
+            options.update(extra_options)
 
         for attempt in range(retries + 1):
             try:
@@ -73,7 +82,7 @@ class OllamaClient:
                         {"role": "user", "content": user_content},
                     ],
                     format=schema.model_json_schema(),
-                    options={"temperature": settings.llm_temperature},
+                    options=options,
                 )
                 raw_content = response["message"]["content"]
                 data = json.loads(raw_content)

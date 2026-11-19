@@ -109,6 +109,26 @@ def normalize_label(label: str) -> str | None:
 REVIEW_DECISIONS = {"Fit", "No Fit", "Exclude"}
 
 
+_WORD_RE = re.compile(r"[a-z0-9]+")
+
+
+def unsubstantiated_claims(claimed_skills: list[str], resume_text: str) -> list[str]:
+    """Best-effort, non-LLM guardrail: flag any claimed "matching skill" that
+    has literally zero word-level trace in the resume text. Deliberately
+    loose (word-level, not phrase-level) so it only catches blatant
+    fabrication, not minor paraphrasing -- used to enforce "never invent
+    skills" as a checked rule, not just a prompt instruction, for any LLM-
+    generated annotation stage (e.g. dataset/scripts/07_llm_semantic_pilot.py
+    and its finalization step)."""
+    resume_lower = resume_text.lower()
+    flagged = []
+    for skill in claimed_skills:
+        words = [w for w in _WORD_RE.findall(skill.lower()) if len(w) > 2]
+        if words and not any(w in resume_lower for w in words):
+            flagged.append(skill)
+    return flagged
+
+
 def is_eval_eligible(review_decision) -> bool:
     """A golden-set record is eligible for automated evaluation-metric scoring
     unless an independent reviewer explicitly recorded `review_decision ==

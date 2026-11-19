@@ -10,3 +10,4 @@ rendercv[full]>=2.8
 PyYAML>=6.0
 httpx>=0.28
 pytest>=9.0
+python-dotenv>=1.0
