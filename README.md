@@ -27,11 +27,7 @@ Give it your resume and a job description; it parses your resume, analyzes the j
 
 ## Demo
 
-<!-- TODO: replace with your hosted demo recording. A local walkthrough
-     (`nextrole demo.mp4`) is not included in this repository because of its
-     size — upload it to YouTube, Loom, or a similar host and link it here,
-     e.g.: -->
-> 🎥 [Watch the demo](#) — resume upload, JD analysis, tailoring, approval, interview prep, and PDF export end to end.
+> 🎥 [Watch the demo](https://drive.google.com/file/d/1AyoCz8XbPCd86u0zgMwjvFEUNyQ8PVjB/view?usp=sharing) — resume upload, JD analysis, tailoring, approval, interview prep, and PDF export end to end.
 
 ## Overview
 
