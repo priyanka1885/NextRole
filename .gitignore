@@ -22,10 +22,6 @@ frontend/dist/
 dataset/output/cleaned_dataset.csv
 dataset/output/annotated_dataset.csv
 
-# Demo recording (large binary; host externally and link it from the
-# README instead of committing it)
-*.mp4
-
 # Stray OneNote notebook files (not part of the project)
 *.one
 *.onetoc2
